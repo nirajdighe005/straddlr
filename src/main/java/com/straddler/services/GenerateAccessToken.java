@@ -9,9 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.FileOutputStream;
-import java.util.Properties;
-
 @Component
 public class GenerateAccessToken extends BasicService implements IGenerateAccessToken {
 
@@ -27,15 +24,9 @@ public class GenerateAccessToken extends BasicService implements IGenerateAccess
     public IRootObject main(IRootObject root) throws Throwable {
 
         User user = kiteConnect.generateSession(request_token, api_secret);
-
-        System.out.println("access_token : " + user.accessToken);
-        System.out.println("public token : " + user.publicToken);
-
-        Properties props = new Properties();
-        FileOutputStream out = new FileOutputStream("access_token.properties");
-        props.setProperty("access_token", user.accessToken);
-        props.store(out, null);
-        out.close();
+        Logger.log("access_token : " + user.accessToken);
+        Logger.log("public token : " + user.publicToken);
+        kiteConnect.setAccessToken(user.accessToken);
         return null;
     }
 }
