@@ -61,7 +61,7 @@ public class StraddleUtils {
         return Integer.MAX_VALUE;
     }
 
-    public Map<SellType, String> getStraddleTradingSymbols() throws IOException, KiteException {
+    public Map<SellType, String> initializeStraddleTradingSymbols() throws IOException, KiteException {
         if (tradingSymbols.isEmpty()) {
             Date expiry = dateTimeUtils.getNextThursday();
             long atmStrike = getAtmStrike();

@@ -1,23 +1,22 @@
 package com.straddler.services;
 
+import org.springframework.stereotype.Component;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+@Component
 public class DateTimeUtils {
-
-    public final List<LocalDate> holidays = Collections.singletonList(LocalDate.of(2021, 8, 19));
-
 
     public Date getNextThursday() {
         LocalDate ld = LocalDate.now();
         LocalDate nextThursday = ld.with(TemporalAdjusters.nextOrSame(DayOfWeek.THURSDAY));
-        if (holidays.contains(nextThursday)) {
+        if (Constants.HOLIDAYS.contains(nextThursday)) {
             nextThursday = ld.with(TemporalAdjusters.nextOrSame(DayOfWeek.WEDNESDAY));
         }
         return Date.from(nextThursday.atStartOfDay(ZoneId.systemDefault()).toInstant());
