@@ -38,15 +38,15 @@ public class StraddleUtils {
     @Autowired
     DateTimeUtils dateTimeUtils;
 
-    public Map<SellType, Quote> getStraddleQuotes(Map<SellType, String> tradingSymbols) throws IOException, KiteException {
-        Map<String, Quote> quotes = kiteConnect.getQuote(tradingSymbols.values().toArray(String[]::new));
+    public Map<SellType, Quote> getStraddleQuotes(Map<SellType, Long> instrumentTokens) throws IOException, KiteException {
+        Map<String, Quote> quotes = kiteConnect.getQuote(instrumentTokens.values().stream().map(String::valueOf).toArray(String[]::new));
         Map<SellType, Quote> sellingQuotes = new HashMap<>();
 
-        for (Map.Entry<SellType, String> tradingSymbol : tradingSymbols.entrySet()) {
-            if (tradingSymbol.getKey().equals(PE)) {
-                sellingQuotes.put(PE,quotes.get(tradingSymbol.getValue()));
-            } else if (tradingSymbol.getKey().equals(CE)) {
-                sellingQuotes.put(CE,quotes.get(tradingSymbol.getValue()));
+        for (Map.Entry<SellType, Long> instrumentToken : instrumentTokens.entrySet()) {
+            if (instrumentToken.getKey().equals(PE)) {
+                sellingQuotes.put(PE,quotes.get(String.valueOf(instrumentToken.getValue())));
+            } else if (instrumentToken.getKey().equals(CE)) {
+                sellingQuotes.put(CE,quotes.get(String.valueOf(instrumentToken.getValue())));
             }
         }
         return sellingQuotes;
@@ -61,20 +61,23 @@ public class StraddleUtils {
         return Integer.MAX_VALUE;
     }
 
-    public Map<SellType, String> initializeStraddleTradingSymbols() throws IOException, KiteException {
+    public Map<SellType, Long> initializeStraddleTradingSymbols() throws IOException, KiteException {
+        Map<SellType, Long> instrumentTokens = new HashMap<>();
         if (tradingSymbols.isEmpty()) {
             Date expiry = dateTimeUtils.getNextThursday();
             long atmStrike = getAtmStrike();
             List<Instrument> nfoInstruments = getStraddleInstruments(expiry, atmStrike);
             for (Instrument nfoInstrument : nfoInstruments) {
                 if (nfoInstrument.getTradingsymbol().contains(SellType.CE.name())) {
-                    tradingSymbols.put(SellType.CE, tradingSymbol);
+                    instrumentTokens.put(SellType.CE, nfoInstrument.getInstrument_token());
+                    tradingSymbols.put(SellType.CE, nfoInstrument.getTradingsymbol());
                 } else if (nfoInstrument.getTradingsymbol().contains(SellType.PE.name())) {
-                    tradingSymbols.put(SellType.PE, tradingSymbol);
+                    instrumentTokens.put(SellType.PE, nfoInstrument.getInstrument_token());
+                    tradingSymbols.put(SellType.PE, nfoInstrument.getTradingsymbol());
                 }
             }
         }
-        return tradingSymbols;
+        return instrumentTokens;
     }
 
     private List<Instrument> getStraddleInstruments(Date expiry, long atmStrike) throws KiteException, IOException {

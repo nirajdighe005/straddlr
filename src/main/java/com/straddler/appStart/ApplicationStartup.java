@@ -33,15 +33,15 @@ public class ApplicationStartup implements ApplicationListener<ApplicationStarte
     @Override
     public void onApplicationEvent(ApplicationStartedEvent event) {
         try {
-            if (shouldTradeToday()) {
-                generateAccessToken.main(new RootObject());
+            generateAccessToken.main(new RootObject());
+            /*if (shouldTradeToday()) {
             }
             else {
                 Logger.log("CANNOT TRADE TODAY OR AT CURRENT TIME");
                 terminateBean.main(null);
-            }
+            }*/
         } catch (Throwable throwable) {
-            Logger.log("Could not generate access token. Please check the following exception");
+            Logger.log("Could not generate access token. Please check the following exception.");
             throwable.printStackTrace();
             terminateBean.main(null);
         }

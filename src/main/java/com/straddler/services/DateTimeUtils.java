@@ -16,7 +16,7 @@ public class DateTimeUtils {
     public Date getNextThursday() {
         LocalDate ld = LocalDate.now();
         LocalDate nextThursday = ld.with(TemporalAdjusters.nextOrSame(DayOfWeek.THURSDAY));
-        if (Constants.HOLIDAYS.contains(nextThursday)) {
+        if (CommonConstants.HOLIDAYS.contains(nextThursday)) {
             nextThursday = ld.with(TemporalAdjusters.nextOrSame(DayOfWeek.WEDNESDAY));
         }
         return Date.from(nextThursday.atStartOfDay(ZoneId.systemDefault()).toInstant());

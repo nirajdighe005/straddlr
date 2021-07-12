@@ -22,11 +22,12 @@ public class GenerateAccessToken extends BasicService implements IGenerateAccess
 
     @Override
     public IRootObject main(IRootObject root) throws Throwable {
-
+/*
         User user = kiteConnect.generateSession(request_token, api_secret);
         Logger.log("access_token : " + user.accessToken);
-        Logger.log("public token : " + user.publicToken);
-        kiteConnect.setAccessToken(user.accessToken);
+        Logger.log("public token : " + user.publicToken);*/
+
+        kiteConnect.setAccessToken("o6IG8wqmcfl0Jdkd4mR19rtM2vMDGu8c");
         return null;
     }
 }
